@@ -1,332 +1,176 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MyLinkSpace</title>
-    <link
-      rel="icon"
-      type="image/jpeg"
-      href="https://res.cloudinary.com/crvidoqc/image/upload/v1791715087/WhatsApp_Image_2026-10-11_at_11.30.23_AM_y1omqu.jpg"
-    />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              ink: "#19313a",
-              teal: "#087f73",
-              pale: "#eef9f8",
-              line: "#dce8e7",
-              muted: "#6d7d82",
-            },
-            boxShadow: { soft: "0 8px 28px rgba(33, 69, 76, .07)" },
-          },
-        },
-      };
-    </script>
-    <link rel="stylesheet" href="MyLinkSpace.css" />
-  </head>
-  <body>
-    <div class="app-shell">
-      <div class="drawer-overlay" id="drawerOverlay"></div>
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-head">
-          <div class="brand">
-            <img
-              class="brand-logo"
-              src="https://res.cloudinary.com/crvidoqc/image/upload/v1791715087/WhatsApp_Image_2026-10-11_at_11.30.23_AM_y1omqu.jpg"
-              alt="MyLinkSpace logo"
-            />
-            <div class="brand-name" aria-label="MyLinkSpace"><span class="brand-my">My</span><span class="brand-link">Link</span><span class="brand-space">Space</span></div>
-          </div>
-          <button
-            class="sidebar-close"
-            id="sidebarClose"
-            type="button"
-            aria-label="Close navigation"
-          >
-            ×
-          </button>
-        </div>
-        <nav aria-label="Main navigation">
-          <button class="nav-link active" data-page="home">
-            <span><img
-                src="https://res.cloudinary.com/crvidoqc/image/upload/v1791718241/home_22dp_1F1F1F_FILL0_wght400_GRAD0_opsz24_o3ius8.png"
-                alt=""
-                class="w-[90%] h-full pr-3" /></span> Home
-          </button>
-          <button class="nav-link" data-page="archived">
-            <span><img
-                src="https://res.cloudinary.com/crvidoqc/image/upload/v1791718241/archive_y9bkdx.png"
-                alt="archive"
-                class="w-[90%] h-full pr-3" /></span> Archived
-            <span class="count" id="archivedCount">0</span>
-          </button>
-          <div class="nav-title">Tags</div>
-          <div id="tagNavigation"></div>
-        </nav>
-      </aside>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyLinkSpace</title>
+  <link rel="icon" href="https://res.cloudinary.com/crvidoqc/image/upload/v1791715087/WhatsApp_Image_2026-10-11_at_11.30.23_AM_y1omqu.jpg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-      <main class="main">
-        <header class="topbar">
-          <button
-            class="mobile-menu"
-            id="mobileMenu"
-            type="button"
-            aria-label="Open navigation"
-          >
-            ☰
-          </button>
-          <div class="search-wrap">
-            <span class="search-icon flex justify-center items-center"
-              ><img
-                src="https://res.cloudinary.com/crvidoqc/image/upload/v1791718242/search_o3l3s6.png"
-                alt=""
-                class="w-[90%] h-full pr-3" /></span
-            ><input
-              id="bookmarkFilter"
-              type="text"
-              class="search"
-              aria-label="Search bookmarks"
-              autocomplete="off"
-              spellcheck="false"
-            />
-          </div>
-          <div class="top-actions">
-            <button class="btn primary" id="addBtn" type="button">
-              <img
-                class="add-bookmark-icon"
-                src="https://res.cloudinary.com/crvidoqc/image/upload/v1791726372/bookmark_tpaa80.png"
-                alt=""
-              />
-              <span>Add Bookmark</span>
-            </button>
-            <button class="btn import-label" id="importBtn" type="button">
-              Import
-            </button>
-            <input
-              id="importFile"
-              class="file-input"
-              type="file"
-              accept="application/json,.json"
-              tabindex="-1"
-              aria-hidden="true"
-            />
-            <button class="btn export" id="exportBtn" type="button">
-              Export
-            </button>
-            <div class="avatar hidden" aria-label="Profile">K</div>
-          </div>
-        </header>
+  <!-- =============================================
+       TASK 1: UI & STRUCTURE
+       Done by: Samuel Olaniran (Lead), Kafayah Olaniyan,
+                Sulaimon Akintunde, Oladejo Aisha
 
-        <div class="content">
-          <!-- Home page -->
-          <section id="homePage" data-page-section="home">
-            <div class="page-head">
-              <div>
-                <div class="eyebrow">Workspace</div>
-                <h1 id="homeTitle">
-                  All bookmarks
-                  <small
-                    id="resultTotal"
-                    style="font-size: 11px; color: #879598"
-                    >(0)</small
-                  >
-                </h1>
-                <p class="sub">
-                  Save, organize and launch your favorite links.
-                </p>
-              </div>
-            </div>
-            <div class="toolbar">
-              <span class="result-count" id="resultLabel">Your saved links</span
-              ><select class="sort" id="sort">
-                <option value="newest">Sort by newest</option>
-                <option value="title">Sort by title</option>
-              </select>
-            </div>
-            <div class="bookmark-grid" id="bookmarkGrid"></div>
-            <div class="empty" id="homeEmpty" hidden>
-              <div class="empty-icon">
-                <img
-                  src="https://res.cloudinary.com/crvidoqc/image/upload/v1791718723/file_ymviuj.png"
-                  alt=""
-                />
-              </div>
-              <h3 id="emptyTitle">No bookmarks yet</h3>
-              <p id="emptyText">
-                Start adding your favorite links to keep them all in one place.
-              </p>
-              <button class="btn primary" id="emptyAdd" type="button">
-                <img
-                  class="add-bookmark-icon"
-                  src="https://res.cloudinary.com/crvidoqc/image/upload/v1791726372/bookmark_tpaa80.png"
-                  alt=""
-                />
-                <span>Add Bookmark</span>
-              </button>
-            </div>
-          </section>
+       This file has the whole layout of MyLinkSpace.
+       ============================================= -->
 
-          <!-- Archived page -->
-          <section id="archivedPage" data-page-section="archived" hidden>
-            <div class="page-head">
-              <div>
-                <div class="eyebrow">Workspace</div>
-                <h1>Archived bookmarks</h1>
-                <p class="sub" id="archivedSubtitle">0 archived bookmarks</p>
-              </div>
-              <button class="btn primary" id="restoreAll" type="button">
-                Restore all
-              </button>
-            </div>
-            <div id="archivedList"></div>
-            <div class="empty" id="archivedEmpty" hidden>
-              <div class="empty-icon">
-                <img
-                  src="https://res.cloudinary.com/crvidoqc/image/upload/v1791718723/file_ymviuj.png"
-                  alt=""
-                />
-              </div>
-              <h3>Nothing archived</h3>
-              <p>Archived bookmarks will appear here.</p>
-            </div>
-          </section>
+  <!-- Dark background behind the menu on phones -->
+  <div id="overlay" class="overlay"></div>
 
-        </div>
-      </main>
+  <!-- ========== SIDEBAR ========== -->
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">
+      <img class="brand-logo" src="https://res.cloudinary.com/crvidoqc/image/upload/v1791715087/WhatsApp_Image_2026-10-11_at_11.30.23_AM_y1omqu.jpg" alt="MyLinkSpace logo">
+      <span class="brand-name">
+        <span class="brand-my">My</span><span class="brand-link">Link</span><span class="brand-space">Space</span>
+      </span>
+      <button id="closeMenuBtn" class="close-menu" aria-label="Close menu">×</button>
     </div>
 
-    <!-- Bookmark card template: structure lives in HTML; JS only fills its data. -->
-    <template id="bookmarkCardTemplate">
-      <article class="card">
-        <div class="card-top">
-          <div class="site-icon">
-            <img class="site-favicon" alt="" /><span
-              class="site-letter"
-              hidden
-            ></span>
-          </div>
-          <button
-            class="menu"
-            data-menu
-            type="button"
-            aria-label="Bookmark options"
-          >
-            ⋮
-          </button>
-        </div>
-        <span class="category" data-category></span>
-        <h3 data-title></h3>
-        <div class="url" data-url></div>
-        <p class="description" data-description></p>
-        <div class="tags" data-tags></div>
-        <div class="card-bottom">
-          <button class="open" data-open type="button">Open link ↗</button
-          ><span class="date" data-date></span>
-        </div>
-      </article>
-    </template>
+    <button id="homeBtn" class="nav-link active">
+      <img class="nav-icon" src="https://res.cloudinary.com/crvidoqc/image/upload/v1791718241/home_22dp_1F1F1F_FILL0_wght400_GRAD0_opsz24_o3ius8.png" alt=""> Home
+    </button>
+    <button id="archivedBtn" class="nav-link">
+      <img class="nav-icon" src="https://res.cloudinary.com/crvidoqc/image/upload/v1791718241/archive_y9bkdx.png" alt=""> Archived <span id="archivedCount" class="count">0</span>
+    </button>
 
-    <template id="archiveRowTemplate">
-      <div class="archive-row">
-        <div class="site-icon">□</div>
-        <div class="grow">
-          <h3 data-title></h3>
-          <p data-url></p>
-        </div>
-        <div class="tags" data-tags></div>
-        <button class="btn" data-restore type="button">Restore</button>
+    <!-- Tag list (the tag buttons are added here by script.js) -->
+    <p class="nav-title">Tags</p>
+    <div id="tagList"></div>
+  </aside>
+
+  <!-- ========== MAIN AREA ========== -->
+  <main class="main">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <!-- menu button for phones -->
+      <button id="openMenuBtn" class="open-menu" aria-label="Open menu">☰</button>
+
+      <!-- search box -->
+      <div class="search-wrap">
+        <img class="search-icon" src="https://res.cloudinary.com/crvidoqc/image/upload/v1791718242/search_o3l3s6.png" alt="">
+        <input id="searchInput" class="search" type="search" placeholder="Search bookmarks..." aria-label="Search bookmarks" autocomplete="off">
       </div>
-    </template>
 
-    <!-- Add / edit bookmark modal -->
-    <div id="bookmarkModal" class="modal hidden">
-      <div class="modal-bg" data-close></div>
-      <section class="modal-card">
-        <div class="modal-head">
-          <div>
-            <h2 id="modalTitle">Add Bookmark</h2>
-            <p>Save a useful link and keep it easy to find.</p>
-          </div>
-          <button class="close-btn" data-close type="button" aria-label="Close">
-            ×
-          </button>
+      <!-- add button -->
+      <button id="addBtn" class="btn primary">
+        <img class="btn-icon" src="https://res.cloudinary.com/crvidoqc/image/upload/v1791726372/bookmark_tpaa80.png" alt=""> Add<span class="long-word">Bookmark</span>
+      </button>
+
+      <!-- import and export buttons -->
+      <button id="importBtn" class="btn">Import</button>
+      <input id="importFile" type="file" accept=".json" hidden>
+      <button id="exportBtn" class="btn">Export</button>
+    </header>
+
+    <div class="content">
+
+      <!-- ========== HOME PAGE ========== -->
+      <section id="homePage">
+        <!-- page heading -->
+        <p class="eyebrow">Workspace</p>
+        <h1><span id="homeTitle">All bookmarks</span> <small id="totalCount">(0)</small></h1>
+        <p class="sub">Save, organize and launch your favorite links.</p>
+
+        <!-- filter label and sort menu -->
+        <div class="toolbar">
+          <span id="filterLabel" class="result-count">Your saved links</span>
+          <select id="sortSelect" class="sort">
+            <option value="newest">Sort by newest</option>
+            <option value="title">Sort by title</option>
+          </select>
         </div>
-        <form id="bookmarkForm">
-          <input type="hidden" id="bookmarkId" />
-          <label
-            >Title <span>*</span
-            ><input
-              id="title"
-              required
-              maxlength="80"
-              placeholder="e.g. MDN Web Docs"
-          /></label>
-          <label
-            >URL <span>*</span
-            ><input
-              id="url"
-              type="url"
-              required
-              placeholder="https://example.com"
-          /></label>
-          <label
-            >Description<textarea
-              id="description"
-              rows="3"
-              placeholder="Add a short description..."
-            ></textarea>
-          </label>
-          <label
-            >Category <span>*</span
-            ><input
-              id="category"
-              required
-              maxlength="35"
-              list="categoryList"
-              placeholder="e.g. Development"
-          /></label>
-          <datalist id="categoryList"></datalist>
-          <label
-            >Tags<input id="tags" placeholder="javascript, docs, tools"
-          /></label>
-          <div class="selected-tags" id="selectedTags"></div>
-          <div class="modal-actions">
-            <button type="button" class="btn light" data-close>Cancel</button
-            ><button type="submit" class="btn primary">Save Bookmark</button>
-          </div>
-        </form>
-      </section>
-    </div>
-    <div id="confirmModal" class="modal hidden">
-      <div class="modal-bg" data-confirm-close></div>
-      <section
-        class="modal-card confirm-card"
-        role="alertdialog"
-        aria-modal="true"
-        aria-labelledby="confirmTitle"
-        aria-describedby="confirmMessage"
-      >
-        <div class="modal-head">
-          <div>
-            <h2 id="confirmTitle">Delete bookmark?</h2>
-            <p id="confirmMessage">This action cannot be undone.</p>
-          </div>
-        </div>
-        <div class="confirm-actions">
-          <button class="btn light" id="confirmCancel" type="button">
-            Cancel
-          </button>
-          <button class="btn danger" id="confirmAction" type="button">
-            Delete
+
+        <!-- The bookmark cards are added here by script.js -->
+        <div id="bookmarkGrid" class="bookmark-grid"></div>
+
+        <!-- shown when there are no bookmarks -->
+        <div id="emptyMessage" class="empty" hidden>
+          <img class="empty-icon" src="https://res.cloudinary.com/crvidoqc/image/upload/v1791718723/file_ymviuj.png" alt="">
+          <h3 id="emptyTitle">No bookmarks yet</h3>
+          <p id="emptyText">Start adding your favorite links to keep them all in one place.</p>
+          <button id="emptyAddBtn" class="btn primary">
+            <img class="btn-icon" src="https://res.cloudinary.com/crvidoqc/image/upload/v1791726372/bookmark_tpaa80.png" alt=""> Add Bookmark
           </button>
         </div>
       </section>
+
+      <!-- ========== ARCHIVED PAGE ========== -->
+      <section id="archivedPage" hidden>
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Workspace</p>
+            <h1>Archived bookmarks</h1>
+            <p id="archivedSubtitle" class="sub">0 archived bookmarks</p>
+          </div>
+          <button id="restoreAllBtn" class="btn primary">Restore all</button>
+        </div>
+
+        <!-- The archived rows are added here by script.js -->
+        <div id="archivedList"></div>
+
+        <div id="archivedEmpty" class="empty" hidden>
+          <img class="empty-icon" src="https://res.cloudinary.com/crvidoqc/image/upload/v1791718723/file_ymviuj.png" alt="">
+          <h3>Nothing archived</h3>
+          <p>Archived bookmarks will appear here.</p>
+        </div>
+      </section>
+
     </div>
-    <div id="toast"></div>
-    <script src="MyLinkSpace.js"></script>
-  </body>
+  </main>
+
+  <!-- ========== ADD / EDIT FORM (pop-up) ========== -->
+  <div id="bookmarkModal" class="modal hidden">
+    <div id="modalBg" class="modal-bg"></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h2 id="modalTitle">Add Bookmark</h2>
+          <p>Save a useful link and keep it easy to find.</p>
+        </div>
+        <button id="closeModalBtn" class="close-btn" aria-label="Close form">×</button>
+      </div>
+
+      <form id="bookmarkForm" novalidate>
+        <label>Title <span>*</span>
+          <input id="title" maxlength="80" placeholder="e.g. MDN Web Docs">
+        </label>
+
+        <label>URL <span>*</span>
+          <input id="url" type="url" inputmode="url" autocomplete="off" placeholder="https://example.com">
+        </label>
+
+        <label>Description
+          <textarea id="description" rows="3" placeholder="Add a short description..."></textarea>
+        </label>
+
+        <label>Category <span>*</span>
+          <input id="category" maxlength="35" list="categoryList" placeholder="e.g. Development">
+        </label>
+        <datalist id="categoryList"></datalist>
+
+        <label>Tags (separate with commas)
+          <input id="tags" placeholder="javascript, docs, tools">
+        </label>
+        <div id="tagPreview" class="tags"></div>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelBtn" class="btn">Cancel</button>
+          <button type="submit" class="btn primary">Save Bookmark</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Small pop-up message in the corner -->
+  <div id="toast"></div>
+
+  <!-- END OF TASK 1 -->
+
+  <script src="script.js"></script>
+</body>
 </html>
